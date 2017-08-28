@@ -102,3 +102,8 @@ ENV/
 
 
 .DS_Store
+
+*.db
+/Savedics
+/img
+/logger

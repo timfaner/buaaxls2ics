@@ -1,5 +1,7 @@
 import re, xlrd, ics, arrow
 import logging
+logger = logging.getLogger('root.xls2ics')
+
 
 v2 = r'[\,\，\s]+'
 re_timesplit = re.compile(v2)
@@ -95,20 +97,20 @@ class ClassInfoHandle:
 
         return rrule
 
-    def getStart(self, area='Xueyuanlu', term_begin_time=arrow.get('2017-09-18T08:00:00+08:00')):
+    def getStart(self, area='xueyuanlu', term_begin_time=arrow.get('2017-09-18T08:00:00+08:00')):
         '''
         Return an arrow object
         '''
         week_off = self._repeat[0] - 1
         day_off = self.time[0]
         hour_off = self.time[1]
-        if area == 'Xueyuanlu':
+        if area == 'xueyuanlu':
             start = term_begin_time.replace( \
             weeks=+week_off,\
             days=+day_off,  \
             hour=xueyuanlu_time[hour_off][0],\
             minute=xueyuanlu_time[hour_off][1])
-        elif area == 'Shahe':
+        elif area == 'shahe':
             start = term_begin_time.replace(\
             weeks=+week_off,\
             days=+day_off,  \
@@ -116,21 +118,21 @@ class ClassInfoHandle:
             minute=shahe_time[hour_off][1])
         return start.isoformat()
 
-    def getEnd(self, area='Xueyuanlu', term_begin_time=arrow.get('2017-09-18T08:00:00+08:00')):
+    def getEnd(self, area='xueyuanlu', term_begin_time=arrow.get('2017-09-18T08:00:00+08:00')):
         week_off = self._repeat[0] - 1
         day_off = self.time[0]
         if len(self.time) == 2:
             hour_off = self.time[1]
         else: hour_off = self.time[-1]
 
-        if area == 'Xueyuanlu':
+        if area == 'xueyuanlu':
             stop = term_begin_time.replace(\
             weeks=+week_off,\
             days=+day_off,  \
             hour=xueyuanlu_time[hour_off][0],\
             minute=xueyuanlu_time[hour_off][1],\
             minutes=+50)  #下课时间加50min
-        elif area == 'Shahe':
+        elif area == 'shahe':
             stop = term_begin_time.replace(\
             weeks=+week_off,\
             days=+day_off,  \
@@ -159,10 +161,10 @@ class XlsParser:
         term_begin_time:学期开始时间,arrow.get()可以识别就行,默认为2017年秋季
     '''
     def __init__(self, xls_content=None, campus='Xueyuanlu', uid=None, xls_filename=None, term_begin_time='2017-09-18T08:00:00+08:00'):
-        
+        logger.info('{} begin parse'.format(uid))
         
         if xls_content:
-            self.data = xlrd.open_workbook(file_content=xls_content)
+            self.data = xlrd.open_workbook(file_contents=xls_content)
         elif xls_filename:
             self.data = xlrd.open_workbook(filename=xls_filename)
         else:
@@ -180,11 +182,12 @@ class XlsParser:
         return self._campus
     @campus.setter
     def campus(self,value):
+        value = str(value).lower()
         
-        if str(value) == 'Shahe' or str(value) == 'Xueyuanlu':
-            self._campus = str(value)
+        if value == 'shahe' or value == 'xueyuanlu':
+            self._campus = value
         else:
-            raise TypeError("compus must be 'Shahe' or 'Xueyuanlu' ",value)
+            raise TypeError("compus must be 'shahe' or 'xueyuanlu' ",value)
      
     @property
     def term_begin_time(self):
@@ -194,7 +197,7 @@ class XlsParser:
         try:
             self._term_begin_time = arrow.get(value)
         except Exception as e:
-            logging.exception(e)
+            logger.exception(e)
             raise e
     
     
@@ -240,9 +243,9 @@ class XlsParser:
                                 celi_info = ClassInfoHandle(i-2,j-2,re_resualt)
                                 celi_info_list.append(celi_info)
                             else:
-                                raise BaseException('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
+                                logger.info('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
                         except Exception as e:
-                            logging.exception(e)
+                            logger.exception(e)
                             
             class_info_list.extend(celi_info_list)
             
