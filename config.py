@@ -9,3 +9,7 @@ UPLOAD_FOLDER = './SavedIcs'
 QR_FOLDER = 'img/'
 HOST = '0.0.0.0'
 SERVER_DOMAIN_NAME = 'app.lovecrislovetim.com/'
+STATIC_FOLDER = 'static/'
+
+MAX_CONTENT_LENGTH = 1024*600
+LOGGER_NAME='root'

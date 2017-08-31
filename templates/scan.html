@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>扫描结果</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="static/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/cover.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="static/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="static/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script>  
+        
+        </script>
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              
+              <button id="nacece" style="display: none;">点击返回</button>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li  class="active"><a href="#">使用</a></li>
+                  <li><a href="/static/webwxgetmsgimg.png">联系我</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        
+          <div id="sss" class="inner cover">
+              <p class="lead">&nbsp;&nbsp;</p>
+              <p class="lead">&nbsp;&nbsp;</p>
+              <p class="lead">&nbsp;&nbsp;</p>
+            <p class="lead">&nbsp;&nbsp;</p>
+            
+            <script>function download(url){
+                　var form = $("<form>");   //定义一个form表单
+                  form.attr('action','getit')
+                  form.attr('style','display:none');   //下面为在form表单中添加查询参数
+                  form.attr('target','');
+                  form.attr('method','get');
+                  var input1 = $('<input>'); 
+                  input1.attr('type','hidden'); 
+                  input1.attr('name','uuid'); 
+                  input1.attr('value',url); 
+                  $('body').append(form);  //将表单放置在web中
+                  form.append(input1);   //将查询参数控件提交到表单上
+                  form.submit();   //表单提交
+              }
+            </script>
+            <button id="button" type="button" class="btn btn-primary btn-lg btn-block" onclick="download('{{ url }}')">点击获取日历！</button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    
+    <script>window.jQuery || document.write('<script src="static/assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="static/assets/js/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript">
+            var u = navigator.userAgent;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+            var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            var isSafari = u.indexOf('Safari') > -1
+            if(isiOS){
+              if(isSafari){
+                download('{{ url }}')
+              }
+              else{
+                $("#button").text("请使用Safari浏览器打开")
+                $("#button").attr("action","alert('请使用Safari浏览器打开')")
+              }
+            }
+            else if(isAndroid){
+              alert("安卓暂未测试,不行的话换个浏览器试试( ˙-˙ )౨")
+            }
+
+      </script>
+  </body>
+</html>

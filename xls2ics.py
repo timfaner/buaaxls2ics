@@ -161,15 +161,16 @@ class XlsParser:
         term_begin_time:学期开始时间,arrow.get()可以识别就行,默认为2017年秋季
     '''
     def __init__(self, xls_content=None, campus='Xueyuanlu', uid=None, xls_filename=None, term_begin_time='2017-09-18T08:00:00+08:00'):
-        logger.info('{} begin parse'.format(uid))
         
+        logger.info('{} begin parse'.format(uid))
+        print('{} begin parse'.format(uid))
         if xls_content:
             self.data = xlrd.open_workbook(file_contents=xls_content)
         elif xls_filename:
             self.data = xlrd.open_workbook(filename=xls_filename)
         else:
             raise TypeError('XlsParser take at least xls_content or xls_filename')
-        
+            logger.warning('{} open failed'.format(uid))
 
         self._campus = str(campus)
         self.uid = uid
@@ -243,16 +244,18 @@ class XlsParser:
                                 celi_info = ClassInfoHandle(i-2,j-2,re_resualt)
                                 celi_info_list.append(celi_info)
                             else:
-                                logger.info('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
+                                logger.warning('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
                         except Exception as e:
                             logger.exception(e)
                             
             class_info_list.extend(celi_info_list)
             
             
+            
 
 
         calendar = ics.Calendar()
+        calendar.creator ="TimFan"
         eventlist = []
 
         term_begin_time=self.term_begin_time
@@ -267,7 +270,7 @@ class XlsParser:
             e.location = celi.getLocation()
             e.description = celi.getTeacher()
             calendar.events.append(e)
-        
+        logger.info('{} finish parse'.format(self.uid))
         return calendar
 
         
