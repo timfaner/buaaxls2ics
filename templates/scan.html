@@ -49,8 +49,9 @@
               <button id="nacece" style="display: none;">点击返回</button>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li  class="active"><a href="#">使用</a></li>
+                  <li  class="active" ><a href="#">使用</a></li>
                   <li><a href="/static/webwxgetmsgimg.png">联系我</a></li>
+                  <li><a href="https://mp.weixin.qq.com/s?__biz=MzIzNDA4ODM5NQ==&mid=2651601052&idx=1&sn=1c57cb189dd243e5ae5a49cc376ca232&chksm=f3032a38c474a32e4333631def778e743cd51c4fa472c2345d429624e68dd14feddde55c541c#rd">教程</a></li>                  
                 </ul>
               </nav>
             </div>
@@ -60,7 +61,7 @@
               <p class="lead">&nbsp;&nbsp;</p>
               <p class="lead">&nbsp;&nbsp;</p>
               <p class="lead">&nbsp;&nbsp;</p>
-            <p class="lead">&nbsp;&nbsp;</p>
+            <small class="little" id='androidtips' style="display: none;">安卓不支持ics直接导入，请点击<a href="/static/de.k3b.android.calendar.ics.adapter_16.apk"><u> 这里 </u></a>下载导入插件，安装完成后点击获取日历，并用刚安装的 Calendar ICS Adapter导入日历</small>
             
             <script>function download(url){
                 　var form = $("<form>");   //定义一个form表单
@@ -101,17 +102,24 @@
             var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
             var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
             var isSafari = u.indexOf('Safari') > -1
+            var isWechat = u.indexOf('MicroMessenger') > -1
             if(isiOS){
               if(isSafari){
                 download('{{ url }}')
               }
               else{
                 $("#button").text("请使用Safari浏览器打开")
-                $("#button").attr("action","alert('请使用Safari浏览器打开')")
+                $("#button").attr("onclick","alert('请使用Safari浏览器打开')")
               }
             }
             else if(isAndroid){
-              alert("安卓暂未测试,不行的话换个浏览器试试( ˙-˙ )౨")
+              if(isWechat){
+                $("#button").text("请换浏览器打开")
+                $("#button").attr("onclick","alert('微信不支持下载，请换一个浏览器打开这个页面')")
+              }
+              else{
+                $("#androidtips").attr("style","display: block;")
+              }
             }
 
       </script>

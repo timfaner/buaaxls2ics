@@ -107,3 +107,5 @@ ENV/
 /Savedics
 /img
 /logger
+
+.vscode/

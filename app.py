@@ -43,10 +43,8 @@ def process():
                     'campus':request.form['area'],\
                     'term_season':'fail',\
                     'term_year':'2017'}
-
             file_content = file.read()
             md5 = calMd5(file_content,xls_dict)
-           
             
             cursor = g.db.cursor()
             cursor.execute('select md5 from files_info where md5=?',(md5,))
@@ -160,7 +158,8 @@ def calMd5(file,xls_dict):
     '''
     user_str = ''
     for i in xls_dict:
-        user_str += str(i)
+        user_str += str(xls_dict[i])
+    print('user_str : ',user_str)
     md5 = hashlib.md5()
     md5.update(file)
     md5.update(user_str.encode('utf-8'))

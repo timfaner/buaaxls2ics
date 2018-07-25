@@ -9,7 +9,7 @@
     <meta name="author" content="TimFan">
     <link rel="icon" href="favicon.ico">
 
-    <title>课表转日历</title>
+    <title>课表转换日历</title>
     <!-- Bootstrap core CSS -->
     <link href="static/css/bootstrap.min.css" rel="stylesheet">
 
@@ -93,12 +93,13 @@
 
           <div class="masthead clearfix">
             <div class="inner">
-              <h3 id="nace" class="masthead-brand">课程表转换器</h3>
+              <h3 id="nace" class="masthead-brand"><a href="/">课程表转换器</a></h3>
               <button id="nacece" style="display: none;">点击返回</button>
               <nav>
                 <ul class="nav masthead-nav">
                   <li  class="active"><a href="#">使用</a></li>
                   <li><a href="/static/webwxgetmsgimg.png">联系我</a></li>
+                  <li><a href="https://mp.weixin.qq.com/s?__biz=MzIzNDA4ODM5NQ==&mid=2651601052&idx=1&sn=1c57cb189dd243e5ae5a49cc376ca232&chksm=f3032a38c474a32e4333631def778e743cd51c4fa472c2345d429624e68dd14feddde55c541c#rd">教程</a></li>
                 </ul>
               </nav>
             </div>
@@ -106,7 +107,7 @@
         
           <div id="indexpage" class="inner cover">
             <h1 class="lead">转换丑陋的教务科表，用日历App优雅的管理课程。</h1>
-            <p>使用方法：选择你的校区，上传教务处的课表，拿起手机扫码，即刻获取日历文件。</p>
+            <p>使用方法: 选择你的校区，上传教务处Excel，拿起手机扫码，即刻获取日历。</p>
             <p class="lead">      </p>
             <p class="lead">&nbsp;&nbsp;</p>
                 <form id="form" action="/process" method=post enctype=multipart/form-data>
@@ -122,7 +123,7 @@
                       <div class="col-4">
                    
                       <input type="file" id="xlsfile" name='file' class="custom-file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"></input>
-                      <small id="fileHelper" class="form-text text-muted">支持xls和xlsx</small>
+                      <small id="fileHelper" class="form-text text-muted">目前支持北航课表</small>
                       
                     </div>
                     <div class="col－5">
@@ -141,13 +142,13 @@
               
               <div >
                   <small class="fontt">或</small>
-                  <p><a id="ics_path" href="/">直接下载</a></p>
+                  <p><a id="ics_path" href="/">直接下载日历文件</a></p>
               </div>
             </div>
 
             <div id="errorpage" class="inner cover" style="display: none;">
                 <p class="lead">&nbsp;&nbsp;</p>
-                <h1 class="lead">emmm发生了些错误,请确认上传正确文件</h1>
+                <h1 class="lead">emmm发生了些错误,请确认上传正确了文件</h1>
                 
                 <p class="lead">&nbsp;&nbsp;</p>
                 <div >
@@ -155,19 +156,14 @@
                     <button type="button" class="btn btn-primary btn-lg" onclick="disshowerror()">返回</button>
                 </div>
               </div>
-          
-        
           <div class="mastfoot">
             <div class="inner">
-                <small>如遇任何问题请联系我</small>
-              <p>Powerd on <a href="http://getbootstrap.com">Bootstrap</a> by <a href="/static/webwxgetmsgimg.png">TimFan</a>.</p>
+                <small>京ICP备17003088号-2</small>
+              <p>Powerd on <a href="http://getbootstrap.com">Bootstrap</a> by <a href="/static/webwxgetmsgimg.png">TimFan</a>. </p>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript
@@ -184,7 +180,6 @@
           disshow()
         })
         </script>
-
 
   </body>
 </html>

@@ -6,37 +6,40 @@ logger = logging.getLogger('root.xls2ics')
 v2 = r'[\,\，\s]+'
 re_timesplit = re.compile(v2)
 
-v4 = r'(\d+)[\-\－]?(\d*)'
+v4 = r'(\d+)[\-\－\,\，]?(\d*)'
 re_repeat = re.compile(v4)
 
-xueyuanlu_time = {\
-    1 : (8, 00), \
-    2 : (8, 55), \
-    3 : (10, 00), \
-    4 : (10, 55), \
-    5 : (14, 00), \
-    6 : (14, 55), \
-    7 : (16, 00), \
-    8 : (16, 55), \
-    9 : (18, 00), \
-    10 : (18, 55), \
-    11 : (20, 00), \
-    12 : (20, 55)}
+xueyuanlu_time = {
+    1 : (8, 00),
+    2 : (8, 50),
+    3 : (9, 50),
+    4 : (10, 40),
+    5 : (11, 30),
+    6 : (14, 00),
+    7 : (14, 50),
+    8 : (15, 50),
+    9 : (16, 40),
+    10 : (17, 30),
+    11 : (19, 00),
+    12 : (19, 50),
+    13 : (20, 40),
+    14 : (21, 30)}
 
 shahe_time = {
-    1 : (8, 10), \
-    2 : (9, 10), \
-    3 : (10, 10), \
-    4 : (11, 10), \
-    5 : (13, 30), \
-    6 : (14, 30), \
-    7 : (15, 30), \
-    8 : (16, 30), \
-    9 : (18, 20), \
-    10 : (19, 20), \
-    11 : (20, 20), \
-    12 : (21, 20)
-}
+    1 : (8, 00),
+    2 : (8, 50),
+    3 : (9, 50),
+    4 : (10, 40),
+    5 : (11, 30),
+    6 : (14, 00),
+    7 : (14, 50),
+    8 : (15, 50),
+    9 : (16, 40),
+    10 : (17, 30),
+    11 : (19, 00),
+    12 : (19, 50),
+    13 : (20, 40),
+    14 : (21, 30)}
 
 
 
@@ -131,14 +134,14 @@ class ClassInfoHandle:
             days=+day_off,  \
             hour=xueyuanlu_time[hour_off][0],\
             minute=xueyuanlu_time[hour_off][1],\
-            minutes=+50)  #下课时间加50min
+            minutes=+45)  #下课时间加45min
         elif area == 'shahe':
             stop = term_begin_time.replace(\
             weeks=+week_off,\
             days=+day_off,  \
             hour=shahe_time[hour_off][0],\
             minute=shahe_time[hour_off][1],\
-            minutes=+50 )   #下课时间加50min
+            minutes=+45 )   #下课时间加45min
         return stop.isoformat()
     
     def getLocation(self):
@@ -148,7 +151,7 @@ class ClassInfoHandle:
         pass
 
     def getTeacher(self):
-        return self.teacher
+        return self.teacher.replace('，','')
     
 
 class XlsParser:
@@ -160,7 +163,7 @@ class XlsParser:
         xls_filename:xls文件名  当xls_content存在时，xls_filenamea失效
         term_begin_time:学期开始时间,arrow.get()可以识别就行,默认为2017年秋季
     '''
-    def __init__(self, xls_content=None, campus='Xueyuanlu', uid=None, xls_filename=None, term_begin_time='2017-09-18T08:00:00+08:00'):
+    def __init__(self, xls_content=None, campus='xueyuanlu', uid=None, xls_filename=None, term_begin_time='2018-09-10T08:00:00+08:00'):
         
         logger.info('{} begin parse'.format(uid))
         print('{} begin parse'.format(uid))
@@ -218,10 +221,11 @@ class XlsParser:
         table = self.table
         #针对不同课表初始化不同re规则
         if title.find('班级') == -1:
-            v1 = r'(?P<class_name>.*?)\<\/br\>(?P<teacher>.*?)\[(?P<repeat>[\w\-\－\，\,]+)\](?P<place_and_time>.*\n.*)'
+            v1 = r'(?P<class_name>.*?)\<\/br\>'
             v3 = r'(?<=节)\<\/br\>'
             re_celisplit = re.compile(v3)
             re_class = re.compile(v1)
+            file_type = 'person'
         else:
             v3 = r'[\n\t|\<\/br\>]+'
             v1 = r'(?P<class_name>.*?)◇(?P<teacher>.*?)\[(?P<repeat>[\w\-\－\，\,]+)\]◇?(?P<place_and_time>[\w\，\,\-\－\(,\),\（,\）]+)'
@@ -238,14 +242,38 @@ class XlsParser:
                     celi_info = []
                     for celi in temp:
                         try:
-                            a = re_class.match(celi)
-                            if a:
-                                re_resualt = a.groupdict()
-                                celi_info = ClassInfoHandle(i-2,j-2,re_resualt)
-                                celi_info_list.append(celi_info)
+                            if not file_type =='person':
+                                a = re_class.match(celi)
+                                if a:
+                                    re_resualt = a.groupdict()
+                                    celi_info = ClassInfoHandle(i-2,j-2,re_resualt)
+                                    celi_info_list.append(celi_info)
+                                else:
+                                    logger.warning('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
                             else:
-                                logger.warning('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
+                                a = re_class.match(celi)
+                                if a:
+                                    re_resualt = a.groupdict()
+                                    teacher_and_repeat = celi[a.span()[1]:celi.rfind(']')+1]
+                                    teacher_and_repeat_list = []
+                                    v6 = re.compile(r'(?P<teacher>.*?)\[(?P<repeat>[\w\-\－\，\,]+)\]')
+                                    def re_search(teacher_and_repeat,container):
+                                        l = v6.search(teacher_and_repeat)
+                                        if l:
+                                            container.append(l.groupdict())
+                                            teacher_and_repeat = teacher_and_repeat[l.span()[1]:]
+                                            re_search(teacher_and_repeat,container)
+                                    re_search(teacher_and_repeat,teacher_and_repeat_list)
+                                    place_and_time = celi[celi.rfind(']')+1:].replace('</br>','').replace('\n','')
+                                    re_resualt['place_and_time'] = place_and_time
+                                    for things in teacher_and_repeat_list:
+                                        re_resualt.update(things)
+                                        celi_info = ClassInfoHandle(i-2,j-2,re_resualt)
+                                        celi_info_list.append(celi_info)
+                                else:
+                                    logger.warning('Match Failed: in {}:{} \n match {} \n with pattern {}'.format(i,j,celi,re_class.pattern))
                         except Exception as e:
+                            print(e)
                             logger.exception(e)
                             
             class_info_list.extend(celi_info_list)
@@ -274,5 +302,10 @@ class XlsParser:
         return calendar
 
         
-if __name__ == 'main':
-    print('heihei,this is moudle')
+if __name__ == '__main__':
+    m = XlsParser(xls_filename='/Users/TimFan/Downloads/1.xls')
+    ics = m.getIcs()
+    with open('/Users/TimFan/Downloads/1.ics','a',encoding='utf-8') as f:
+        f.writelines(ics)
+
+
